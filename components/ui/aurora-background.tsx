@@ -22,7 +22,7 @@ export const AuroraBackground = ({
         {/* Aurora Layer */}
         <div
           className={cn(
-            "absolute inset-0 pointer-events-none aurora-animation",
+            "absolute inset-0 pointer-events-none aurora-animate",
             showRadialGradient &&
               "after:absolute after:inset-0 after:content-[''] after:opacity-40 after:blur-[60px] after:mix-blend-soft-light"
           )}

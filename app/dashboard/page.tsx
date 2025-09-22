@@ -384,7 +384,7 @@ const IntegratedSatelliteDashboard = () => {
 
           {/* Satellite Fleet Carousel with Meteors Background */}
           <div className="relative w-full mb-0 bg-gray-900/40 backdrop-blur-sm pt-8 pb-16 overflow-hidden">
-            <Meteors number={40} className="pointer-events-none" />
+            <Meteors number={20} className="pointer-events-none" />
 
             <div className="max-w-7xl mx-auto px-6 mb-6 relative z-10">
               <h2 className="text-xl font-semibold text-white flex items-center">
