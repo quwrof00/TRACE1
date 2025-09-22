@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import React, { useRef, useState, useEffect } from "react";
 
 export const Meteors = ({
-  number = 20,
+  number = 40,
   className,
 }: {
   number?: number;
@@ -43,19 +43,17 @@ export const Meteors = ({
           <span
             key={"meteor" + idx}
             className={cn(
-              "animate-meteor-effect absolute h-[2px] w-[2px] rotate-[45deg] rounded-full bg-white",
-              // brighter glow + longer trail
-              "shadow-[0_0_6px_2px_rgba(255,255,255,0.8)]",
-              "before:absolute before:top-1/2 before:h-[2px] before:w-[160px] before:-translate-y-1/2",
-              "before:bg-gradient-to-r before:from-white before:via-white/70 before:to-transparent before:content-['']",
+              "animate-meteor-effect absolute h-[1.5px] w-[1.5px] rotate-[45deg] rounded-full bg-white/80",
+              "shadow-[0_0_4px_1px_rgba(255,255,255,0.4)]",
+              "before:absolute before:top-1/2 before:h-[1.5px] before:w-[80px] before:-translate-y-1/2",
+              "before:bg-gradient-to-r before:from-white/50 before:via-white/30 before:to-transparent before:content-['']",
               className,
             )}
             style={{
               top: "-60px",
               left: `${position}px`,
-              animationDelay: Math.random() * 5 + "s",
-              animationDuration:
-                "2s"
+              animationDelay: `${Math.random() * 2}s`, // Random delay up to 2s
+              animationDuration: "4s"
             }}
           ></span>
         );

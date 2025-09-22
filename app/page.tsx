@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
   const globeRef = useRef<HTMLDivElement>(null);
   const globeInstance = useRef<any>(null);
 
@@ -120,7 +122,7 @@ export default function Home() {
           >
             {/* Main Title */}
             <motion.h1
-              className="font-orbitron text-7xl font-thin text-white mb-8 leading-tight"
+              className="font-orbitron text-7xl font-thin text-white mb-8 mt-4 leading-tight"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 1.4 }}
@@ -154,16 +156,17 @@ export default function Home() {
               transition={{ duration: 1, delay: 2.2 }}
             >
               <motion.button
-                className="px-8 py-4 bg-gradient-to-r from-satellite-cyan to-cosmic-purple text-white font-orbitron font-bold rounded-lg uppercase tracking-wider shadow-lg"
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: "0 20px 25px -5px rgba(0, 201, 255, 0.2)"
-                }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-              >
-                Dashboard
-              </motion.button>
+  className="px-8 py-4 bg-gradient-to-r from-satellite-cyan to-cosmic-purple text-white font-orbitron font-bold rounded-lg uppercase tracking-wider shadow-lg"
+  whileHover={{
+    scale: 1.05,
+    boxShadow: "0 20px 25px -5px rgba(0, 201, 255, 0.2)"
+  }}
+  whileTap={{ scale: 0.95 }}
+  transition={{ duration: 0.2 }}
+  onClick={() => router.push('/dashboard')}
+>
+  Dashboard
+</motion.button>
               <motion.button
                 className="px-8 py-4 border-2 border-white text-white font-orbitron font-bold rounded-lg uppercase tracking-wider hover:bg-white hover:text-deep-space"
                 whileHover={{
