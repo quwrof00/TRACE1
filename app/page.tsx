@@ -1,103 +1,219 @@
-import Image from "next/image";
+'use client';
+
+import { useEffect, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const globeRef = useRef<HTMLDivElement>(null);
+  const globeInstance = useRef<any>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  // Initialize Globe
+  useEffect(() => {
+    if (!globeRef.current) return;
+
+    initializeGlobe();
+
+    return () => {
+      if (globeInstance.current) {
+        globeInstance.current = null;
+      }
+    };
+  }, []);
+
+  const initializeGlobe = useCallback(async () => {
+    if (!globeRef.current || globeInstance.current || typeof window === 'undefined') return;
+
+    try {
+      const Globe = (await import('globe.gl')).default;
+
+      const globe = new (Globe as any)(globeRef.current)
+        .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+        .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
+        .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+        .enablePointerInteraction(true)
+        .width(600)
+        .height(600);
+
+      // Set initial camera position
+      globe.pointOfView({ altitude: 2.5 });
+
+      // Enable auto rotation
+      const controls = globe.controls();
+      if (controls) {
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 1;
+        controls.enableZoom = false;
+      }
+
+      globeInstance.current = globe;
+    } catch (error) {
+      console.error('Error initializing globe:', error);
+    }
+  }, []);
+
+  return (
+    <div className="h-screen w-screen overflow-hidden bg-deep-space relative">
+      {/* Transparent Navigation Bar */}
+      <motion.nav
+        className="absolute top-0 w-full bg-transparent backdrop-blur-sm z-50 py-6 px-8"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.5 }}
+      >
+        <div className="flex justify-between items-center">
+          {/* Left side - Dashboard */}
+          <motion.div
+            className="font-orbitron text-3xl font-bold text-white"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Dashboard
+          </motion.div>
+
+          {/* Right side - Navigation Links */}
+          <motion.div
+            className="flex space-x-8"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
           >
-            Read our docs
-          </a>
+            <motion.a
+              href="#data"
+              className="text-white font-orbitron text-lg hover:text-satellite-cyan transition-all duration-300 relative"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Add Data
+              <motion.div
+                className="absolute bottom-0 left-0 w-0 h-0.5 bg-satellite-cyan"
+                whileHover={{ width: "100%" }}
+                transition={{ duration: 0.3 }}
+              />
+            </motion.a>
+            <motion.a
+              href="#overview"
+              className="text-white font-orbitron text-lg hover:text-satellite-cyan transition-all duration-300 relative"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Overview
+              <motion.div
+                className="absolute bottom-0 left-0 w-0 h-0.5 bg-satellite-cyan"
+                whileHover={{ width: "100%" }}
+                transition={{ duration: 0.3 }}
+              />
+            </motion.a>
+          </motion.div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </motion.nav>
+
+      {/* Main Content Container */}
+      <div className="flex h-full">
+        {/* Left Side - Content */}
+        <div className="flex-1 flex items-center justify-center pl-12 pt-20">
+          <motion.div
+            className="max-w-2xl"
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 1.2 }}
+          >
+            {/* Main Title */}
+            <motion.h1
+              className="font-orbitron text-7xl font-thin text-white mb-8 leading-tight"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 1.4 }}
+            >
+              <span className="text-satellite-cyan">TRACE</span>: Time-Resolved Accurate Clock & Ephemeris
+            </motion.h1>
+
+            {/* Animated Divider */}
+            <motion.div
+              className="w-32 h-1 bg-gradient-to-r from-satellite-cyan to-cosmic-purple mb-8"
+              initial={{ width: 0 }}
+              animate={{ width: 128 }}
+              transition={{ duration: 1, delay: 1.8 }}
+            />
+
+            {/* Description */}
+            <motion.p
+              className="text-gray-300 text-xl mb-12 leading-relaxed font-light"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 2 }}
+            >
+              Advanced 3D visualization platform for real-time satellite positioning error prediction and analysis. Experience the future of space technology monitoring.
+            </motion.p>
+
+            {/* Action Buttons */}
+            <motion.div
+              className="flex space-x-6"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 2.2 }}
+            >
+              <motion.button
+                className="px-8 py-4 bg-gradient-to-r from-satellite-cyan to-cosmic-purple text-white font-orbitron font-bold rounded-lg uppercase tracking-wider shadow-lg"
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 20px 25px -5px rgba(0, 201, 255, 0.2)"
+                }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
+                Dashboard
+              </motion.button>
+              <motion.button
+                className="px-8 py-4 border-2 border-white text-white font-orbitron font-bold rounded-lg uppercase tracking-wider hover:bg-white hover:text-deep-space"
+                whileHover={{
+                  scale: 1.05,
+                  backgroundColor: "#ffffff",
+                  color: "#0A192F"
+                }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
+                Explore Data
+              </motion.button>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              className="grid grid-cols-3 gap-8 mt-16"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 2.4 }}
+            >  
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Right Side - Globe */}
+        <div className="flex-1 flex items-center justify-center relative">
+          <motion.div
+            className="relative"
+            initial={{ opacity: 0, scale: 0.5, rotateY: 90 }}
+            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+            transition={{ duration: 1.5, delay: 1 }}
+          >
+            <div ref={globeRef} className="w-[600px] h-[600px]">
+              {/* Globe renders here */}
+            </div>
+
+            {/* Status Indicator */}
+            <motion.div
+              className="absolute top-8 left-8 bg-deep-space/80 backdrop-blur-sm border border-satellite-cyan/30 rounded-lg p-4"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 3.2 }}
+            >
+              <div className="text-satellite-cyan font-orbitron text-sm font-bold">EARTH VIEW</div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+
     </div>
   );
 }
